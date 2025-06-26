@@ -15,7 +15,13 @@
 <!-- 2.) Create a UI5 button and place it onto the page -->
 <script>
 	var oModel = new sap.ui.model.odata.ODataModel("/euro.xsodata", true);
-	var oTable = new sap.ui.table.Table({ title: "European Countries" });
+	var oTable = new sap.ui.table.Table({         
+ 			title: "European Countries", 
+ 			visibleRowCount: 10, id: "tinytab",
+    		toolbar: new sap.ui.commons.Toolbar({items: [ 
+        		new sap.ui.commons.Button({text: "Add Country", 
+					press:openFirstDialog})
+		]})});
 
 	oTable.addColumn(new sap.ui.table.Column({ label: "Country Name", template: "name" }));
 	oTable.setModel(oModel); oTable.bindRows("/euro"); oTable.placeAt("content");

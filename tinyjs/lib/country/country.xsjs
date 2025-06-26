@@ -13,28 +13,35 @@ async function saveCountry(country) {
 			IM_CONTINENT: country.partof
 		});
 
-		if ( result && result.EX_ERROR != null ) {
-			return result.EX_ERROR;
+		if (result && result.EX_ERROR != null) {
+			return {
+				body: result,
+				status: $.net.http.BAD_REQUEST
+			};
 		} else {
 			await conn.commit();
+
+			return {
+				body: output,
+				status: $.net.http.CREATED
+			};
 		}
 	} finally {
 		if (conn) {
 			await conn.close();
-		}   	
+		}
 	}
-   
-   	return output;
+
+	return "";
 }
 
-var country = {
-	name: $.request.parameters.get("name"),
-	partof: $.request.parameters.get("continent")
-};
+var body = $.request.body.asString();
+var country = JSON.parse(body);
 
 // validate the inputs here!
 var output = await saveCountry(country);
 
 $.response.contentType = "application/json";
-$.response.setBody(output);
-//$.response.setStatus = output.status;
+
+$.response.setBody(output.body);
+$.response.setStatus = output.status;
